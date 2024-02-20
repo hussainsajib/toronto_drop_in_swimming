@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 
 from .utils import get_collection
 from .selenium_utils import get_headless_chrome
+from data_types.collection_names import CollectionNames
 
 
 
@@ -67,7 +68,7 @@ def fetch_dropin_swimming_data() -> None:
 
 def fetch_community_center_data() -> None:
     print("INFO: Starting fetch_community_center_data")
-    collection = get_collection("centers")
+    collection = get_collection(CollectionNames.CENTERS.value)
     driver = get_headless_chrome()
     driver.get(COMMUNITY_CENTER_URL)
     rows = driver.find_elements(By.XPATH, "//tbody/tr")

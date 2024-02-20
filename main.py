@@ -50,6 +50,10 @@ async def populate_database():
     results = collection.find()
     return {"centers": dumps(list(results))}
 
+@app.get("/centers/")
+async def get_centers():
+    pass
+
 
 @app.get("/swimming")
 async def get_swimming_info():

@@ -15,12 +15,12 @@ app = FastAPI()
 scheduler = BackgroundScheduler()
 scheduler.start()
 
-# scheduler.add_job(
-#     fetch_dropin_swimming_data,
-#     trigger=IntervalTrigger(seconds=60),
-#     id="scrape_swimming_toronto",
-#     replace_existing=True
-# )
+scheduler.add_job(
+    fetch_dropin_swimming_data,
+    trigger=IntervalTrigger(seconds=60),
+    id="scrape_swimming_toronto",
+    replace_existing=True
+)
 
 scheduler.add_job(
     fetch_community_center_data,

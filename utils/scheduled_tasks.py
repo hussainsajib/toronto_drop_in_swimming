@@ -15,6 +15,7 @@ COMMUNITY_CENTER_URL = "https://www.toronto.ca/data/parks/prd/facilities/recreat
 
 
 def fetch_dropin_swimming_data() -> None:
+    print("INFO: Starting fetch_dropin_swimming_data")
     collection = get_collection()
     response = requests.get(BASE_URL)
     soup = BeautifulSoup(response.content, "html.parser")
@@ -61,9 +62,11 @@ def fetch_dropin_swimming_data() -> None:
             collection.insert_one(output)
         else:
             print(f"{center_name} already exists in the database")
+    print("INFO: Finished running fetch_dropin_swimming_data")
 
 
 def fetch_community_center_data() -> None:
+    print("INFO: Starting fetch_community_center_data")
     collection = get_collection("centers")
     driver = get_headless_chrome()
     driver.get(COMMUNITY_CENTER_URL)
@@ -85,5 +88,7 @@ def fetch_community_center_data() -> None:
             print(f"{center_name} already exists in the database")
     if all_centers:
         collection.insert_many(all_centers)
-        
+        print(f"INFO: {len(all_centers)} community center data was written to the database")
+    
+    print("INFO: Finished running fetch_community_center_data")    
     

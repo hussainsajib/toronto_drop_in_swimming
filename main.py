@@ -1,11 +1,36 @@
 import re
+import atexit
 from fastapi import FastAPI
-from utils.utils import get_collection, generate_data
-from bson.json_util import dumps, loads
-from datetime import datetime
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.interval import IntervalTrigger
+from utils.utils import get_collection
+from bson.json_util import dumps
+
+from utils.scheduled_tasks import (
+    fetch_dropin_swimming_data, 
+    fetch_community_center_data
+)
 
 app = FastAPI()
+scheduler = BackgroundScheduler()
+scheduler.start()
 
+# scheduler.add_job(
+#     fetch_dropin_swimming_data,
+#     trigger=IntervalTrigger(seconds=60),
+#     id="scrape_swimming_toronto",
+#     replace_existing=True
+# )
+
+scheduler.add_job(
+    fetch_community_center_data,
+    trigger=IntervalTrigger(seconds=10),
+    id="scrape_community_centers",
+    replace_existing=True
+)
+
+
+atexit.register(lambda: scheduler.shutdown())
 
 @app.get("/")
 def home():
@@ -21,7 +46,6 @@ async def clean_database():
 
 @app.get("/generate-data/")
 async def populate_database():
-    generate_data()
     collection = get_collection()
     results = collection.find()
     return {"centers": dumps(list(results))}
